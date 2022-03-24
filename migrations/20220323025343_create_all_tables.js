@@ -10,6 +10,7 @@ exports.up = function(knex) {
       table.string('email');
       table.string('username').unique();
       table.string('password').unique();
+<<<<<<< HEAD
       table.binary('displayImage')
   })
   .createTable('post',table=>{
@@ -19,6 +20,16 @@ exports.up = function(knex) {
       table.text('content').notNullable;
       table.binary('media')
       table.timestamps(true,true);
+=======
+      table.binary('media')
+  })
+  .createTable('post',table=>{
+      table.bigIncrements('id');
+      table.string('username');
+      table.text('title');
+      table.text('content');
+      table.binary('media')
+>>>>>>> 00dde2c (day-one-progress)
       table.foreign('username')
         .references('username')
         .inTable('users')

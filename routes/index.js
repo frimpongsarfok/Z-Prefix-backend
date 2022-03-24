@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+<<<<<<< HEAD
 
 const saltRounds = 10;
 const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'production']);
@@ -12,6 +13,14 @@ const upload = multer({ storage: storage })
 
 // await because user login is needed before other transaction will be proceed
   const login=(username,password)=>{
+=======
+const saltRounds = 10;
+const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
+
+
+// await because user login is needed before other transaction will be proceed
+  const login= async (username,password)=>{
+>>>>>>> 00dde2c (day-one-progress)
 
   //get username
   //if found compare password 
@@ -20,6 +29,7 @@ const upload = multer({ storage: storage })
   //else username not found respond 
 //      404 msg username not exist
   //
+<<<<<<< HEAD
 
   return new Promise((resolve,reject)=>{
    if(!username||!password){
@@ -38,17 +48,38 @@ const upload = multer({ storage: storage })
          })
         }else{
             return reject({status:404,msg:"user name not found"})
+=======
+   if(!username||!password){
+    return Promise.reject({status:401,msg:'username and password required'});
+   }else{
+    return  knex('users').where({username:username})
+      .then(rows=>{
+        if(rows.length){
+         return bcrypt.compare(password, rows[0].password)
+          .then((result)=>new Promise((resolve,reject)=>{
+            const user={...rows[0]}
+            user.password=password;
+            result? resolve(user):reject({status:404,msg:'password incorrect'})        
+         }))
+        }else{
+            return Promise.reject({status:404,msg:"user name not found"})
+>>>>>>> 00dde2c (day-one-progress)
         }
 
       })
    }
+<<<<<<< HEAD
   });
+=======
+
+>>>>>>> 00dde2c (day-one-progress)
 
 }
 
 //LOGOUT
 router.get('/logout', function(req, res, next) {
    
+<<<<<<< HEAD
   res.clearCookie('username').clearCookie('password')
   .status(200).json({status:200,msg:'logout successful'})
    
@@ -69,6 +100,19 @@ router.get('/login', function(req, res, next) {
         .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
          .status(200).json(user);
    }).catch(err=>res.status(404).json({status:401,msg:err.detail}))
+=======
+  res.clearCookie('username').clearCookie('password').
+   status(200).json({msg:'logout successful'})
+});
+///LOGIN
+router.get('/login', function(req, res, next) {
+   
+  const {username,password}=req.query;
+   login(username,password).then(user=>{
+        res.cookie('username',user.username)
+        .cookie('password',user.password).status(200).json(user);
+   }).catch(err=>res.status(404).json(err))
+>>>>>>> 00dde2c (day-one-progress)
   
 });
   
@@ -82,17 +126,25 @@ router.get('/login', function(req, res, next) {
 // //salt&hash password before stored in db
 router.post('/signup', function(req, res, next) {
   const {fname,lname,email,username,password}=req.body;
+<<<<<<< HEAD
 
   if(!fname||!lname||!email||!username||!password){
       res.status(401).json({status:401,msg:'All fields required (firt name,last name,email,username,password)'})
       return;
   }
 
+=======
+  if(!fname||!lname||!email||!username||!password){
+      res.status(401).json({status:401,msg:'all field required (firt name,last name,email,username,password)'})
+      return;
+  }
+>>>>>>> 00dde2c (day-one-progress)
   bcrypt.genSalt(saltRounds, function(err, salt) {
     bcrypt.hash(password, salt, function(err, hash) {
       const  query={...req.body};
       query.password=hash;
       knex('users').insert(query)
+<<<<<<< HEAD
       .then(rows=>{
       query.password=password;  
       res.status(200)
@@ -134,11 +186,25 @@ router.get('/user', function(req, res, next) {
 })
 //
 router.put('/user', upload.single('displayImage'),function(req, res, next) {
+=======
+      .then(rows=>res.status(200)
+      .cookie('username',username)
+      .cookie('password',password)
+      .json(query))
+      .catch(err=>res.json(err));
+    });
+  });
+})
+/ //SIGN UP USER
+// //salt&hash password before stored in db
+router.put('/profile', function(req, res, next) {
+>>>>>>> 00dde2c (day-one-progress)
   const {username,password}=req.cookies;
   if(!username||!password){
     res.status(404).json({status:404,msg:'login required'})
     return;
   }
+<<<<<<< HEAD
   const {fname,lname,email,new_username,new_password}=req.body;     
   if(!fname&&!lname&&!email&&!new_username&&!new_password){
       res.status(401).json({status:401,msg:'one of the field required (firt name,last name,email,username,password)'})
@@ -152,11 +218,28 @@ router.put('/user', upload.single('displayImage'),function(req, res, next) {
       password:new_password,
       displayImage:req.file?req.file.buffer:undefined,
      }
+=======
+  const {fname,lname,email,new_username,new_password,media}=req.body;
+  
+  if(!fname&&!lname&&!email&&!new_username&&!new_password &&!media){
+      res.status(401).json({status:401,msg:'one of the field required (firt name,last name,email,username,password, display picture) '})
+      return;
+  }
+
+ 
+    let query={fname:fname,lname:lname,email:email}
+  if(new_username){
+    query.username=new_username;
+  }
+  if(new_password){
+    query.password=new_password;
+>>>>>>> 00dde2c (day-one-progress)
     bcrypt.genSalt(saltRounds, function(err, salt) {
       bcrypt.hash(new_password, salt, function(err, hash) {
         query.password=hash;
         knex('users').update(query).where({username:username})
         .then(rows=>res.status(201)
+<<<<<<< HEAD
          .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
         .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
         .json({status:200,msg:'profile updated successful'}))
@@ -185,11 +268,33 @@ router.put('/user', upload.single('displayImage'),function(req, res, next) {
 
 
 
+=======
+        .cookie('username',new_username?new_username:new_username)
+        .cookie('password',hash)
+        .json({msg:'profile updated successful'}))
+        .catch(err=>res.status(401).json(err));
+      });
+    })
+  }else{
+        knex('users').update(query).where({username:username})
+        .then(rows=>res.status(201)
+
+        .cookie('username',new_username?new_username:new_username)
+        .cookie('password',password)
+        .json({msg:'profile updated successful'}))
+        .catch(err=>res.status(401).json(err));
+  }
+  
+  
+  
+})
+>>>>>>> 00dde2c (day-one-progress)
 // GET 50 POST CONTENT AT A TIME
 //if USER ID PROVIDED SELECT UP USER POST 
 router.get('/post', function(req, res, next) {
 
   const {username,password}=req.cookies;
+<<<<<<< HEAD
 const {mypost}=req.query;
  if(mypost==='true'){
   console.log('hieie',typeof mypost)
@@ -307,17 +412,43 @@ router.get('/search',(req,res)=>{
 
 
 router.post('/post', upload.single('media'),function(req, res, next) {
+=======
+  if(!username||!password){
+    res.status(404).json({status:404,msg:'login required'})
+    return;
+  }
+
+  const {mypost,last_range_id}=req.query;
+   const lastID=parseInt(last_range_id)+0;
+  if(last_range_id && mypost){
+    knex('post').whereBetween('id',[lastID,lastID+50]).andWhere({username:username})
+    .then(rows=>res.status(200).json(rows))
+    .catch(err=>res.status(404).json(err))
+  }else {
+    knex('post').whereBetween('id',[lastID,lastID+50])
+    .then(rows=>res.status(200).json(rows))
+    .catch(err=>res.status(404).json(err))
+  }
+  
+});
+router.post('/post', function(req, res, next) {
+>>>>>>> 00dde2c (day-one-progress)
 
   const {username,password}=req.cookies;
   if(!username||!password){
     res.status(404).json({status:404,msg:'login required'})
     return;
   }
+<<<<<<< HEAD
   const {title,content}=req.body;
+=======
+  const {title,content,media}=req.body;
+>>>>>>> 00dde2c (day-one-progress)
   if(!title || !content){
     res.status(401).json({status:401,msg:'field required (e.i title,content) ,optional media eg. picture'})
     return;
 }
+<<<<<<< HEAD
   const query={
     username:username,
     title:req.body.title,
@@ -328,6 +459,14 @@ router.post('/post', upload.single('media'),function(req, res, next) {
   knex('post').insert(query)
     .then(rows=>res.status(200).json({status:200,msg:'posted successfully'}))
     .catch(err=>res.status(401).json({status:401,msg:err.detail}));
+=======
+  const query={...req.body}
+  query.username=username;
+  console.log(query);
+  knex('post').insert(query)
+    .then(rows=>res.status(200).json({msg:'posted successful'}))
+    .catch(err=>console.log(err))//res.status(401).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 });
 
 // UPDATE POST WITH PUT METHOD
@@ -350,7 +489,11 @@ router.put('/post', function(req, res, next) {
 
   knex('post').update(query).where({username:username,id:id})
       .then(status=>res.status(201).json({msg:'updated successful'}))
+<<<<<<< HEAD
       .catch(err=>res.status(201).json({status:401,msg:err.detail}));
+=======
+      .catch(err=>res.status(201).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 
 });
 // // UPDATE POST WITH PATCH METHOD
@@ -373,17 +516,29 @@ router.put('/post', function(req, res, next) {
   
 //     knex('post').where({username:username,id:id}).update(query)
 //         .then(rows=>res.status(201).json({msg:'updated successful'}))
+<<<<<<< HEAD
 //         .catch(res.status(201).json({status:401,msg:err.detail}));
+=======
+//         .catch(res.status(201).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 //   }
 //   if(content){
 //     knex('post').where({username:username,id:id}).update(query)
 //         .then(rows=>res.status(201).json({msg:'updated successful'}))
+<<<<<<< HEAD
 //         .catch(res.status(201).json({status:401,msg:err.detail}));
+=======
+//         .catch(res.status(201).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 //   }
 //   if(media){
 //     knex('post').where({username:username,id:id}).update(query)
 //     .then(rows=>res.status(201).json({msg:'updated successful'}))
+<<<<<<< HEAD
 //     .catch(res.status(201).json({status:401,msg:err.detail}));
+=======
+//     .catch(res.status(201).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 //   }
 
 // });
@@ -402,6 +557,10 @@ router.delete('/post', function(req, res, next) {
 }
   knex('post').where({username:username,id:post_id}).del()
     .then(rows=>res.status(200).json({msg:'post deleted successful'}))
+<<<<<<< HEAD
     .catch(err=>res.status(401).json({status:401,msg:err.detail}));
+=======
+    .catch(err=>res.status(401).json(err));
+>>>>>>> 00dde2c (day-one-progress)
 });
 module.exports = router;
