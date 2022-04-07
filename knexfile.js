@@ -3,7 +3,7 @@
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
- module.exports = {
+module.exports = {
 
   development: {
     client: 'pg',
@@ -11,8 +11,12 @@
   },
 
   staging: {
-    client: 'pg',
-    connection:'postgres://postgres:docker@localhost:5432/z_prefix',
+    client: 'postgresql',
+    connection: {
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
     pool: {
       min: 2,
       max: 10
@@ -22,21 +26,19 @@
     }
   },
 
-production: {
-    client: "pg",
+  production: {
+    client: 'postgresql',
     connection: {
-      connectionString: process.env.DATABASE_URL,
+      connectionString:'postgres://legsqufnpqgpqm:3e22c16eb68c3f2f331c1b7ee93ab9138ebebd39004b42a2d0e5e453de4d8878@ec2-34-231-63-30.compute-1.amazonaws.com:5432/d6p9jm15ciuj0q',
       ssl: { rejectUnauthorized: false },
+     },
+    pool: {
+      min: 2,
+      max: 10
     },
     migrations: {
-      directory: __dirname + "/db/migrations",
-    },
-    seeds: {
-      directory: __dirname + "/db/seeds",
-    },
-  },
-   
-   
-  
+      tableName: 'knex_migrations'
+    }
+  }
 
 };
