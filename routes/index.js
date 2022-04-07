@@ -197,8 +197,12 @@ const {mypost}=req.query;
     return;
   } knex('post').where({username:username}).orderBy('created_at','desc')
   .then(posts=>{
-  
+    
    let userPostJSON=[];
+    if(!posts.length){
+      res.status(200).json(userPostJSON);
+    return;
+   }
    posts.forEach( async(post,idx) => {
       await   knex('users').where({username:post.username})
         .then(user=>{
@@ -234,6 +238,10 @@ const {mypost}=req.query;
   .then(posts=>{
   
    let userPostJSON=[];
+    if(!posts.length){
+      res.status(200).json(userPostJSON);
+    return;
+   }
    posts.forEach( async(post,idx) => {
       await   knex('users').where({username:post.username})
         .then(user=>{
