@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-const clientAddress='http://localhost:3000';
+const clientAddress='https://z-prefix-news.herokuapp.com';
 
 var app = express();
 
