@@ -230,7 +230,7 @@ const {mypost}=req.query;
    
    });
 
-}).catch(err=>res.status(404).json({status:401,msg:err.detail}))
+}).catch(err=>res.status(404).json({status:401,msg:err}))
 
 
  }else{
@@ -265,11 +265,11 @@ const {mypost}=req.query;
           if((idx+1)>=posts.length){
             res.status(200).json(userPostJSON);
           }
-        }).catch(err=>res.status(404).json({status:401,msg:err.detail}));
+        }).catch(err=>res.status(404).json({status:401,msg:err}));
    
    });
 
-}).catch(err=>res.status(404).json({status:401,msg:err.detail}))
+}).catch(err=>res.status(404).json({status:401,msg:err}))
 
  }
 
