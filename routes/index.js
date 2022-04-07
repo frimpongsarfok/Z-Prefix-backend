@@ -270,7 +270,11 @@ const {mypost}=req.query;
 
 router.get('/search',(req,res)=>{
     const {value}=req.query;
- 
+    if(!value){
+    
+      res.status(200).json([]);
+      return;
+    }
     knex.raw(`
         SELECT users.fname,users.lname,users.username,post.title,post.media,post.id
     FROM  users
