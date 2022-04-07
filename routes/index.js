@@ -50,7 +50,7 @@ const upload = multer({ storage: storage })
 router.get('/logout', function(req, res, next) {
    
   res.clearCookie('username').clearCookie('password')
-  .status(200).json({status:200,msg:'profile updated successful'})
+  .status(200).json({status:200,msg:'logout successful'})
    
 });
 
