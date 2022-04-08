@@ -3,7 +3,7 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
+const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'production']);
 const request = require('request');
 const multer  = require('multer');
 const storage = multer.memoryStorage()
@@ -65,8 +65,8 @@ router.get('/login', function(req, res, next) {
         res
         .clearCookie('username')
         .clearCookie('password')
-         .cookie('username',user.username,{ SameSite: 'none', Secure: true})
-        .cookie('password',user.password,{ SameSite: 'none', Secure: true})
+         .cookie('username',user.username,{ SameSite: 'Lax'})
+        .cookie('password',user.password,{ SameSite: 'Lax'})
          .status(200).json(user);
    }).catch(err=>res.status(404).json({status:401,msg:err.detail}))
   
