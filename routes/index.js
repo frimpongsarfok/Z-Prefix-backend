@@ -3,7 +3,7 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'production']);
+const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
 const request = require('request');
 const multer  = require('multer');
 const storage = multer.memoryStorage()
