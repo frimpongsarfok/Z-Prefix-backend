@@ -30,7 +30,7 @@ const upload = multer({ storage: storage })
           .then((result)=>new Promise((resolve,reject)=>{
             const user={...rows[0]}
             user.password=password;
-            result? resolve(user):reject({status:404,msg:'password incorrect'})        
+            result? resolve(user):reject({status:401,msg:'password incorrect'})        
          }))
         }else{
             return Promise.reject({status:404,msg:"user name not found"})
@@ -52,18 +52,15 @@ router.get('/logout', function(req, res, next) {
 
 
 ///LOGIN
-router.get('/login', function(req, res, next) {
-  const {username,password}=req.query;
 
+router.get('/login', function(req, res, next) {
+   
+  const {username,password}=req.query;
    login(username,password).then(user=>{
-    
-        res
-        .clearCookie('username')
-        .clearCookie('password')
-         .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
-        .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
-         .status(200).json(user);
-   }).catch(err=>res.status(404).json({status:401,msg:err.detail}))
+    res
+    .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
+    .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
+   }).catch(err=>res.status(401).json(err))
   
 });
   
