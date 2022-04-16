@@ -101,8 +101,10 @@ router.post('/signup', function(req, res, next) {
       .then(rows=>{
       query.password=password;  
       res.status(200)
-       .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
-        .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
+       .setHeader('Set-Cookie', [
+          `username=${user.username}; SameSite=None; Secure`,
+          `password=${user.password}; SameSite=None; Secure`,
+        ])
       .json(query)
     })
       .catch(err=>res.status(401).json({status:401,msg:err.detail}));
@@ -161,9 +163,11 @@ router.put('/user', upload.single('displayImage'),function(req, res, next) {
       bcrypt.hash(new_password, salt, function(err, hash) {
         query.password=hash;
         knex('users').update(query).where({username:username})
-        .then(rows=>res.status(201)
-         .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
-        .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
+        .then(rows=>res.status(200)
+        .setHeader('Set-Cookie', [
+           `username=${user.username}; SameSite=None; Secure`,
+           `password=${user.password}; SameSite=None; Secure`,
+         ])
         .json({status:200,msg:'profile updated successful'}))
         .catch(err=>res.status(401).json({status:401,msg:err.detail}));
       });
