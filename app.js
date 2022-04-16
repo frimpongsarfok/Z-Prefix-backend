@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cookieSession = require("cookie-session");
 
 var indexRouter = require('./routes/index');
 const clientAddress='https://z-prefix-news.herokuapp.com';
@@ -20,6 +21,20 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
      next();
 });
+
+
+app.set('trust proxy', 1)
+app.use(
+    cookieSession({
+      name: "__session",
+      keys: ["key1"],
+        maxAge: 24 * 60 * 60 * 100,
+        secure: true,
+        httpOnly: false,
+        sameSite: 'none'
+    })
+);
+
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
