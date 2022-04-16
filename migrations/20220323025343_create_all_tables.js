@@ -24,6 +24,8 @@ exports.up = function(knex) {
         .inTable('users')
         .onDelete('cascade')
         .onUpdate('cascade');
+
+        
   })
 };
 
