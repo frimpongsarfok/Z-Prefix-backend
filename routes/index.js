@@ -57,7 +57,10 @@ const upload = multer({ storage: storage })
 //LOGOUT
 router.get('/logout', function(req, res, next) {
    
-  res.clearCookie('username').clearCookie('password')
+  res.setHeader('Set-Cookie', [
+    `username=; SameSite=None; Secure`,
+    `password=; SameSite=None; Secure`,
+  ])
   .status(200).json({status:200,msg:'logout successful'})
    
 });
