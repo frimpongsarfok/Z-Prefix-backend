@@ -10,14 +10,15 @@ exports.up = function(knex) {
       table.string('email');
       table.string('username').unique();
       table.string('password').unique();
-      table.binary('media')
+      table.binary('displayImage')
   })
   .createTable('post',table=>{
       table.bigIncrements('id');
-      table.string('username');
-      table.text('title');
-      table.text('content');
+      table.string('username').notNullable;
+      table.text('title').notNullable;
+      table.text('content').notNullable;
       table.binary('media')
+      table.timestamps(true,true);
       table.foreign('username')
         .references('username')
         .inTable('users')
