@@ -69,12 +69,10 @@ router.get('/login', function(req, res, next) {
   const {username,password}=req.query;
    login(username,password).then(user=>{
      
-        res
-        .clearCookie('username')
-        .clearCookie('password')
-         .cookie('username',user.username,)
-        .cookie('password',user.password,)
-         .status(200).json(user);
+    res.setHeader('Set-Cookie', [
+      `username=${user.username}; SameSite=None; Secure`,
+      `password=${user.password}; SameSite=None; Secure`,
+    ]).status(200).json(user);
    }).catch(err=>res.status(404).json(err.detail?{status:401,msg:err.detail}:err))
   
 });
