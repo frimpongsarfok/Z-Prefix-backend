@@ -72,8 +72,8 @@ router.get('/login', function(req, res, next) {
         res
         .clearCookie('username')
         .clearCookie('password')
-         .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
-        .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
+         .cookie('username',user.username,)
+        .cookie('password',user.password,)
          .status(200).json(user);
    }).catch(err=>res.status(404).json(err.detail?{status:401,msg:err.detail}:err))
   
