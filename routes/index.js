@@ -61,8 +61,9 @@ router.get('/login', function(req, res, next) {
         res
         .clearCookie('username')
         .clearCookie('password')
-         .cookie('username',user.username,{ expires: new Date(Date.now() + 900000), httpOnly: true })
-        .cookie('password',user.password,{ expires: new Date(Date.now() + 900000), httpOnly: true })
+         .cookie('username',user.username,{ expires: new Date(Date.now() + 900000), httpOnly: false })
+        .cookie('password',user.password,{ expires: new Date(Date.now() + 900000), httpOnly: false })
+        
          .status(200).json(user);
    }).catch(err=>res.status(404).json({status:401,msg:err.detail}))
   
@@ -92,8 +93,8 @@ router.post('/signup', function(req, res, next) {
       .then(rows=>{
       query.password=password;  
       res.status(200)
-       .cookie('username',user.username,{ expires: new Date(Date.now() + 900000), httpOnly: true })
-        .cookie('password',user.password,{ expires: new Date(Date.now() + 900000), httpOnly: true })
+       .cookie('username',user.username,{httpOnly: false })
+        .cookie('password',user.password,{ httpOnly: false })
       .json(query)
     })
       .catch(err=>res.status(401).json({status:401,msg:err.detail}));
@@ -154,12 +155,17 @@ router.put('/user', upload.single('displayImage'),function(req, res, next) {
         knex('users').update(query).where({username:username})
         .then(rows=>res.status(201)
 <<<<<<< HEAD
+<<<<<<< HEAD
          .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
         .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
 =======
          .cookie('username',user.username,{ expires: new Date(Date.now() + 900000), httpOnly: true })
         .cookie('password',user.password,{ expires: new Date(Date.now() + 900000), httpOnly: true })
 >>>>>>> d271deb (set Cookies)
+=======
+         .cookie('username',user.username,{  httpOnly: true })
+        .cookie('password',user.password,{ httpOnly: true })
+>>>>>>> 8bfed3f (Update index.js)
         .json({status:200,msg:'profile updated successful'}))
         .catch(err=>res.status(401).json({status:401,msg:err.detail}));
       });
