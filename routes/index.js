@@ -57,7 +57,8 @@ router.get('/login', function(req, res, next) {
    
   const {username,password}=req.query;
    login(username,password).then(user=>{
-    res
+  
+    res.clearCookie('username').clearCookie('password')
     .cookie('username',user.username,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
     .cookie('password',user.password,{ SameSite: 'none', secure: true, expires: new Date(Date.now() + 900000)})
    }).catch(err=>res.status(401).json(err))
