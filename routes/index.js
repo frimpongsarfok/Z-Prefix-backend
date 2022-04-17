@@ -53,6 +53,9 @@ const upload = multer({ storage: storage })
 
 }
 
+
+
+
 //LOGOUT
 router.get('/logout', function(req, res, next) {
    
