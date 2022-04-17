@@ -3,7 +3,7 @@ var router = express.Router();
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'production']);
+const knex = require('knex')(require('../knexfile.js')[process.env.NODE_ENV || 'development']);
 const request = require('request');
 const multer  = require('multer');
 const storage = multer.memoryStorage()
@@ -204,7 +204,7 @@ router.get('/post', function(req, res, next) {
   const {username,password}=req.cookies;
 const {mypost}=req.query;
  if(mypost==='true'){
-  console.log('hieie',typeof mypost)
+
   if(!username||!password){
     res.status(404).json({status:404,msg:'login required'})
     return;
