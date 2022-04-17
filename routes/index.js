@@ -343,7 +343,7 @@ router.post('/post', upload.single('media'),function(req, res, next) {
 });
 
 // UPDATE POST WITH PUT METHOD
-router.put('/post', function(req, res, next) {
+router.put('/post', upload.single('media'),function(req, res, next) {
   
   const {username,password}=req.cookies;
   if(!username||!password){
@@ -352,19 +352,22 @@ router.put('/post', function(req, res, next) {
   }
   const {post_id,title,content,media}=req.body;
   if(!post_id&&!title&&!content){
-      res.status(401).json({status:401,msg:'field required (e.i title,content) ,optional media'})
+      res.status(401).json({status:40,msg:'field required (e.i title,content) ,optional media'})
       return;
   }
   const query={...req.body};
   const id=query.post_id;
   delete query.post_id;
-  console.log(query,id,username);
+  query.media=req.file?req.file.buffer:undefined;
+  
 
   knex('post').update(query).where({username:username,id:id})
-      .then(status=>res.status(201).json({msg:'updated successful'}))
-      .catch(err=>res.status(201).json({status:401,msg:err.detail}));
+      .then(status=>res.status(201).json({status:200,msg:'updated successful'}))
+      .catch(err=>console.log(err))//res.status(201).json({status:401,msg:err.detail}));
 
 });
+
+
 // // UPDATE POST WITH PATCH METHOD
 // router.patch('/post', function(req, res, next) {
 //   console.log(req.query);

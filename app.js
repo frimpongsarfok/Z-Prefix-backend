@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cookieSession = require("cookie-session");
 
 var indexRouter = require('./routes/index');
-const clientAddress='http://localhost:3002';
+const clientAddress='https://z-prefix-news.herokuapp.com';
 
 var app = express();
 
