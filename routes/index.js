@@ -38,10 +38,9 @@ const upload = multer({ storage: storage })
           bcrypt.compare(password, rows[0].password)
           .then((result)=>{
             const user={...rows[0]}
-            console.log(result);
+      
             user.password=password;
-            user.displayImage?
-            user.displayImage=`data:image/png;base64,${new Buffer.from(user.displayImage).toString("base64")}`:undefined;
+            user.displayImage=user.displayImage?`data:image/png;base64,${new Buffer.from(user.displayImage).toString("base64")}`:undefined;
             result? resolve(user):reject({status:404,msg:'password incorrect'})        
          })
         }else{
